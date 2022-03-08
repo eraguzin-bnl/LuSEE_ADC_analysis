@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 from scipy.fft import fft, fftfreq
 import pandas as pd
 from scipy.signal import blackman
+import math
 
 class ADC():
     def __init__(self, input_file):
@@ -41,8 +42,8 @@ class ADC():
         ywf = fft(y*w)
         xf = fftfreq(N, T)[:N//2]
 
-        plt.semilogy(xf, 2.0/N * np.abs(yf[0:N//2]))
-        plt.semilogy(xf, 2.0/N * np.abs(ywf[0:N//2]))
+        plt.semilogy(xf, 20 * math.log10(2.0/N * np.abs(yf[0:N//2])))
+        plt.semilogy(xf, 20 * math.log10(2.0/N * np.abs(ywf[0:N//2])))
 
         plt.grid()
 
