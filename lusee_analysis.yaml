@@ -1,0 +1,40 @@
+---
+AD9253 both plots:
+  #Script will parse data based on the ADC given
+  adc: "AD9253"
+  data_dir: "ad9253_outputs/50MHz/"
+  data_file: "samples.csv"
+
+  #Include the actual samples on the plot
+  include_samples: true
+
+  #Name for plot title
+  name: "50 MHz sine wave input, no filter"
+  plot_file: "AD9253_no_filter.png"
+
+  #This would include previous ADC manufacturer applet FFT analysis for comparison
+  include_previous: true
+  previous_file: "fft2.csv"
+
+  #e.g. if it was a 500 mV sine wave, put in 500
+  input_FS: 500
+
+AD9253 just fft:
+  #Script will parse data based on the ADC given
+  adc: "AD9253"
+  data_dir: "ad9253_outputs/50MHz/"
+  data_file: "samples.csv"
+
+  #Include the actual samples on the plot
+  include_samples: false
+
+  #Name for plot title
+  name: "50 MHz sine wave input, no filter"
+  plot_file: "AD9253_no_filter_no_samples.png"
+
+  #This would include previous ADC manufacturer applet FFT analysis for comparison
+  include_previous: false
+  previous_file: "fft2.csv"
+
+  #e.g. if it was a 500 mV sine wave, put in 500
+  input_FS: 500
