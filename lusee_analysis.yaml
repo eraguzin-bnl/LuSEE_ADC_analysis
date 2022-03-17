@@ -7,6 +7,7 @@ AD9253 both plots:
 
   #Include the actual samples on the plot
   include_samples: true
+  num_samples: 40
 
   #Name for plot title
   name: "50 MHz sine wave input, no filter"
@@ -38,3 +39,49 @@ AD9253 just fft:
 
   #e.g. if it was a 500 mV sine wave, put in 500
   input_FS: 500
+
+ADC3664 both plots:
+  #Script will parse data based on the ADC given
+  adc: "ADC3664"
+  data_dir: "adc3664_outputs"
+  data_file: "50MHz_500mV_samples.xlsx"
+
+  #Include the actual samples on the plot and how long
+  include_samples: true
+  num_samples: 40
+
+  #Name for plot title
+  name: "50 MHz sine wave input, no filter"
+  plot_file: "adc3664_no_filter.png"
+
+  #This would include previous ADC manufacturer applet FFT analysis for comparison
+  include_previous: true
+  previous_file: "50MHz_500mV_ftt.xlsx"
+
+  #e.g. if it was a 500 mV sine wave, put in 500
+  input_FS: 500
+  #Sample rate in MHz
+  input_sample_rate: 125
+
+ADS4245 both plots:
+  #Script will parse data based on the ADC given
+  adc: "ADS4245"
+  data_dir: "ads4245_outputs"
+  data_file: "50MHz_500mV_samples.xlsx"
+
+  #Include the actual samples on the plot and how long
+  include_samples: true
+  num_samples: 40
+
+  #Name for plot title
+  name: "50 MHz sine wave input, no filter"
+  plot_file: "ads4245_no_filter.png"
+
+  #This would include previous ADC manufacturer applet FFT analysis for comparison
+  include_previous: true
+  previous_file: "50MHz_500mV_fft.xlsx"
+
+  #e.g. if it was a 500 mV sine wave, put in 500
+  input_FS: 500
+  #Sample rate in MHz
+  input_sample_rate: 125

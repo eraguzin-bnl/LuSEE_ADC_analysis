@@ -33,7 +33,7 @@ class ADC:
 
         T = 1.0 / self.sample_rate
 
-        x = np.linspace(0.0, N * T, N, endpoint=False)
+        x = np.linspace(0.0, N * T, N, endpoint=False) * 1e9
 
         yf = fft(self.data)
         ywf = fft(self.data * w)
@@ -44,9 +44,11 @@ class ADC:
 
         if self.config["include_samples"]:
             fig, (sample_ax, fft_ax) = plt.subplots(nrows=2, ncols=1, figsize=(32, 24))
-            sample_ax.plot(x, self.data)
-            sample_ax.set_xlim([0.00004, 0.000041])
-            sample_ax.set_xlabel("Time (s)", fontsize=self.label_size)
+            sample_ax.plot(x[0:self.config["num_samples"]], self.data[0:self.config["num_samples"]])
+            # sample_ax.set_xlim([0.00004, 0.000041])
+            fft_ax.xaxis.set_major_formatter(FormatStrFormatter('%10.f'))
+            sample_ax.set_xlabel("Time (ns)", fontsize=self.label_size)
+            fft_ax.set_xlabel("ADC Codes", fontsize=self.label_size)
             sample_ax.set_title(f"{self.config['name']} samples", fontsize=self.subtitle_font_size)
             sample_ax.tick_params(axis='x', labelsize=self.tick_size)
             sample_ax.tick_params(axis='y', labelsize=self.tick_size)
@@ -109,8 +111,31 @@ class AD9253(ADC):
         self.plot()
 
 
+class ADC3664(ADC):
+    def __init__(self, config_in):
+        super().__init__()
+        self.config = config_in
+        filepath = os.path.join(config_in["data_dir"], config_in["data_file"])
+        df = pd.read_excel(filepath, usecols=[2, 3], names=["Sample", "Data"])
+        self.sample_rate = int(config_in["input_sample_rate"]) * 1e6
+        self.data = df['Data'].tolist()
+        self.samples = len(self.data)
+        if config_in["include_previous"]:
+            filepath = os.path.join(config_in["data_dir"], config_in["previous_file"])
+            df2 = pd.read_excel(filepath, usecols=[0, 1], names=["Frequency", "Amplitude"])
+            self.prev_fft_frequency = (df2['Frequency'] / 1e6).tolist()
+            self.prev_fft_amplitude = df2['Amplitude'].tolist()
+
+        self.plot()
+
+
+class ADS4245(ADC3664):
+    def __init__(self, config_in):
+        super().__init__(config_in)
+
+
 if __name__ == "__main__":
-    known_adcs = {"AD9253": AD9253}
+    known_adcs = {"AD9253": AD9253, "ADC3664": ADC3664, "ADS4245": ADS4245}
     with open("lusee_analysis.yaml", "r") as f:
         config = yaml.safe_load(f)
 
@@ -120,3 +145,5 @@ if __name__ == "__main__":
         if adc_type in known_adcs:
             adc_object = known_adcs[adc_type]
             adc_object(config[i])
+        else:
+            raise f"ADC type {adc_type} is unknown"
